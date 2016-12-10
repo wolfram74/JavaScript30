@@ -59,6 +59,32 @@
 
 <script>
 
+var keyHandler = (event) => {
+  const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`);
+  const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
+  if(!audio){return};
+  audio.currentTime=0;
+  key.classList.add('playing')
+  audio.play();
+}
+
+// var reverter = (event) => { // binds this to window
+function reverter (event){ // this binding varies
+// var reverter = function (event){ // as does this
+  if(event.propertyName != 'transform'){return}
+  console.log(this)
+  console.log(event.srcElement)
+  event.srcElement.classList.remove('playing')
+}
+
+const keys = document.querySelectorAll('.key')
+
+window.addEventListener('keydown', keyHandler)
+
+keys.forEach(
+  key => { key.addEventListener('transitionend', reverter) }
+)
+
 </script>
 
 
