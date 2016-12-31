@@ -58,6 +58,23 @@
       };
     }
 
+    function checkSlide(event){
+      sliderImages.forEach( image=>{
+        const slideInTrigger = (window.scrollY + window.innerHeight)-image.height/2
+        const imageBottom = image.offsetTop+image.height
+        const middleVisible = slideInTrigger > image.offsetTop
+        const beforeBottom = window.scrollY < imageBottom
+        if(middleVisible && beforeBottom){
+          image.classList.add('active')
+        } else{ image.classList.remove('active')}
+      })
+    }
+
+    const sliderImages = document.querySelectorAll('.slide-in')
+
+    window.addEventListener('scroll', debounce(checkSlide))
+    console.log(sliderImages)
+
   </script>
 
   <style>

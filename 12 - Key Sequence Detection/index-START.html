@@ -7,6 +7,25 @@
 </head>
 <body>
 <script>
+let pressedArray = []
+const sequence = 'tldr'
+function keyListener(event){
+  console.log(event.key)
+  pressedArray.push(event.key)
+  checkSequence()
+}
+
+function checkSequence(){
+  if(pressedArray.length > sequence.length){
+    pressedArray.shift()
+  }
+  if(pressedArray.join('')===sequence){
+    console.log('boring')
+    cornify_add()
+  }
+}
+
+window.addEventListener('keyup', keyListener)
 </script>
 </body>
 </html>
