@@ -31,6 +31,24 @@
   </style>
 
 <script>
+
+function shadow(event){
+  const {offsetWidth: width, offsetHeight:height} = hero;
+  let {offsetX: x, offsetY:y} = event;
+  if(this !== event.target){
+    x+=event.target.offsetLeft;
+    y+=event.target.offsetTop;
+  }
+
+  const xShift =Math.round((x/width * maxShift) - maxShift/2);
+  const yShift =Math.round((y/height * maxShift) - maxShift/2);
+  text.style.textShadow = `${xShift}px ${yShift}px 0 red`;
+}
+const hero = document.querySelector('.hero');
+const text = hero.querySelector('h1');
+const maxShift = 100;
+
+hero.addEventListener('mousemove',shadow)
 </script>
 </body>
 </html>

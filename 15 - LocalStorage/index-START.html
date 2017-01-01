@@ -26,10 +26,54 @@
   </div>
 
 <script>
+  function addItem(event){
+    event.preventDefault()
+    console.log('caught')
+    const item = {
+      text: event.target.querySelector('[name=item]').value,
+      done: false
+    }
+    items.push(item)
+    populateList(items, itemsList)
+    event.target.reset()
+    saveItems()
+  }
+
+  function plateRender(plate, index){
+    return `
+    <li>
+      <input
+        type='checkbox'
+        data-index=${index}
+        id='item${index}'
+        ${plate.done ? 'checked' :''} />
+      <label for='item${index}'> ${plate.text} </label>
+    </li>
+    `
+  }
+
+  function populateList(plates = [], platesContainer ){
+    platesContainer.innerHTML = plates.map(plateRender).join('')
+  }
+  function saveItems(){
+    localStorage.setItem('items', JSON.stringify(items))
+  }
+  function click(event){
+    if(!event.target.matches('input')){return};
+    const itemIndex = event.target.dataset.index
+    items[itemIndex].done = !items[itemIndex].done
+    populateList(items, itemsList)
+    saveItems()
+  }
+
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
 
+  populateList(items, itemsList)
+
+  addItems.addEventListener('submit',addItem)
+  itemsList.addEventListener('click', click)
 </script>
 
 
