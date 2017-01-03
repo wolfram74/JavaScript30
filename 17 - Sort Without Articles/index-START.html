@@ -43,7 +43,27 @@
   <ul id="bands"></ul>
 
 <script>
+
+function articleStripper(string){
+  return string.replace(/^(the|a|an)\s/i, '')
+}
+
+function articleFreeSort(stringA, stringB){
+  return articleStripper(stringA)< articleStripper(stringB) ? -1: 1
+};
+
+function bandRender(band, index){
+  return `<li>${band}</li>`
+}
+
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+/*
+plans for sorting array ignoring articles, the, a, an
+sort function to have branching in case either or both subjects has leading article
+*/
+const sortedBands =bands.sort(articleFreeSort)
+
+document.querySelector('#bands').innerHTML = sortedBands.map(bandRender).join('')
 
 
 </script>

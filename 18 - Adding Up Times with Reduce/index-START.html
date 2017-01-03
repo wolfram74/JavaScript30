@@ -182,6 +182,32 @@
     </li>
 
 <script>
+
+function durationMaker(seconds){
+  const hours = Math.floor(seconds/3600);
+  seconds %= 3600;
+  const minutes = Math.floor(seconds/60);
+  seconds %= 60;
+  return `${hours}:${minutes}:${seconds}`
+}
+const videos = document.querySelectorAll('.videos [data-time]')
+console.log(videos)
+// const timeStrings = [...videos].map(node => {return node.dataset.time})
+// const timeStrings = Array.from(videos).map(node => {return node.dataset.time})
+// console.log(timeStrings)
+const secondsArray = Array.from(videos).map(
+  node => {return node.dataset.time}
+  ).map(timeString =>{
+    const [mins, secs] = timeString.split(':');
+    return (1*mins)*60+1*secs
+  })
+console.log(secondsArray)
+const totalTime = secondsArray.reduce((total, seconds)=>{return total+seconds})
+console.log(totalTime)
+console.log(durationMaker(totalTime))
+console.log(durationMaker(71))
+console.log(durationMaker(3611))
+console.log(durationMaker(3671))
 </script>
 </body>
 </html>
