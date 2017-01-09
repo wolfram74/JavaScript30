@@ -4,6 +4,8 @@ const ctx = canvas.getContext('2d');
 const strip = document.querySelector('.strip');
 const snap = document.querySelector('.snap');
 const booth = document.querySelector('.photobooth')
+const spread = document.querySelector('.spread')
+
 let canvasPaintLoopID = null
 function getVideo(){
   navigator.mediaDevices.getUserMedia(
@@ -27,7 +29,7 @@ function paintToCanvas(){
     let pixels = ctx.getImageData(0,0,width, height);
     // pixels = redEffect(pixels);
     // pixels = rgbSplit(pixels);
-    // ctx.globalAlpha=0.5;
+    // ctx.globalAlpha=0.25;
     greenScreen(pixels);
     ctx.putImageData(pixels, 0, 0)
   }, 20)
@@ -102,44 +104,41 @@ function findPos(obj){
 }
 
 function colorGrab(event){
-  // console.log(findPos(canvas))
   const width = video.videoWidth;
   const height = video.videoHeight;
-  // console.log(width, height)
   const clickX = event.layerX;
   const clickY = event.layerY;
-  //naive x and y invalid for canvas click
+  const scaleFactor = parseInt(window.getComputedStyle(canvas).width)/width
 
-  // console.log('location',clickX ,clickY)
-  var pixelIndex = (event.offsetX + event.offsetY*width)*4
-  // console.log(pixelIndex)
-  var rgbaValue = ctx.getImageData(0,0,width, height).data.slice(pixelIndex,pixelIndex+4)
-  // console.log(rgbaValue)
-  // console.log(ctx.getImageData(clickX, clickY, 1, 1).data)
-  // const pixel = ctx.getImageData(clickX, clickY,1, 1).data
-  const pixel = rgbaValue
+  const canX = clickX/scaleFactor
+  const canY = clickY/scaleFactor
+
+  const pixel = ctx.getImageData(canX, canY,1, 1).data
   const color = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`
-  // console.log(color)
+  spread.dataset.color = pixel
   document.querySelector('label[for="rgbSpread"]').style.backgroundColor = color;
+  updateSliders()
+  spread.addEventListener('mousemove', updateSliders)
+}
+
+function updateSliders(){
   let sliders = document.querySelectorAll('.rgb input');
-  const spread = parseInt(
+  let pixel = spread.dataset.color.split(',').slice(0,4)
+  const range = parseInt(
     document.querySelector('.spread').value
     );
-  console.log(spread);
+  console.log(range);
   // [...sliders].forEach((slider, index)=>{
   for(let index= 0; index < sliders.length; index++){
     let slider = sliders[index]
     const pm = -1 + 2*(index%2)
-    const delta = spread*pm
-    const newColor = pixel[parseInt(index/2)]+delta
-    console.log(newColor)
-    // debugger
-    slider.value += spread*pm
+    const delta = range*pm
+    const center = parseInt(pixel[parseInt(index/2)])
+    const newColor = center+delta
     slider.value = newColor
-    console.log(slider.value)
   }
-  // })
 }
+
 
 getVideo()
 
